@@ -10,13 +10,17 @@ class Book:
         self.borrowed_by = None
         self.due_date = None
 
-    def to_dict(self):
-        return self.__dict__
+    def check_out(self, member_id):
+        self.available = False
+        self.borrowed_by = member_id
+        # Sets due date to 14 days from now
+        self.due_date = (datetime.now() + timedelta(days=14)).strftime('%Y-%m-%d')
 
-    @classmethod
-    def from_dict(cls, data):
-        b = cls(data['title'], data['author'], data['isbn'], data['year'])
-        b.available = data['available']
-        b.borrowed_by = data.get('borrowed_by')
-        b.due_date = data.get('due_date')
-        return b
+    def return_book(self):
+        self.available = True
+        self.borrowed_by = None
+        self.due_date = None
+
+    def __str__(self):
+        status = "Available" if self.available else f"Borrowed by {self.borrowed_by} (Due: {self.due_date})"
+        return f"{self.title.ljust(30)} | {self.author.ljust(20)} | {status}"
